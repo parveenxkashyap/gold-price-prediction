@@ -8,6 +8,7 @@ import pandas as pd
 from gold_price_prediction.data import load_gold_prices
 from gold_price_prediction.features import add_returns_and_lag, split_train_test_by_year
 from gold_price_prediction.modeling import train_linear_regression
+from gold_price_prediction.plotting import plot_actual_vs_predicted
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -45,10 +46,18 @@ def main() -> None:
             "Predicted": result.predictions,
         }
     )
-    out_path = outdir / "predictions_2019.csv"
-    out.to_csv(out_path, index=True)
 
-    print(f"Saved: {out_path}")
+    csv_path = outdir / "predictions_2019.csv"
+    out.to_csv(csv_path, index=True)
+
+    fig_path = plot_actual_vs_predicted(
+        out,
+        title="Gold returns (USD PM): actual vs predicted (2019)",
+        outpath=outdir / "predictions_2019.png",
+    )
+
+    print(f"Saved: {csv_path}")
+    print(f"Saved: {fig_path}")
 
 
 if __name__ == "__main__":
